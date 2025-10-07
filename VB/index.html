@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Assistant</title>
+
+    <link rel="stylesheet" href="index.css">
+  </head>
+  <body>
+    <div class="container">
+      <p>AI Assistant</p>
+
+      <div class="btn">
+        <div class="agent-img">
+          <img src="chatbot.avif" alt="AI Assistant Avatar">
+          <button onclick="startListening()">Start Listening</button>
+        </div>
+
+        <label for="language">Select your language:</label>
+        <select class="language" id="language">
+          <option value="en-US">English</option>
+          <option value="ta-IN">Tamil</option>
+          <option value="hi-IN">Hindi</option>
+        </select>
+      </div>
+    </div>
+
+    <p class="output"></p>
+
+    <!-- Axios CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
+
+    <!-- Link to your script -->
+    <script src="index.js" type="module"></script>
+  </body>
+</html>

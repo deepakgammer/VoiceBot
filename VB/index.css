@@ -1,0 +1,68 @@
+/* Overall container styling */
+.container {
+  text-align: center;
+  margin-top: 100px;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Main button section */
+.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+/* Image + Button group */
+.agent-img {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Assistant image */
+.btn img {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Main action button */
+.agent-img button {
+  width: 180px;
+  height: 45px;
+  border: none;
+  background-color: #4db5ff;
+  border-radius: 6px;
+  font-size: 18px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+/* Button hover animation */
+.agent-img button:hover {
+  background-color: #1a8cff;
+  transform: scale(1.05);
+}
+
+/* Language selector */
+.language {
+  font-size: 16px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: 1px solid #aaa;
+  outline: none;
+}
+
+/* Output text (AI response area) */
+.output {
+  margin-top: 40px;
+  font-size: 20px;
+  color: #333;
+  font-weight: 500;
+}
