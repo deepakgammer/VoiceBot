@@ -1,51 +1,41 @@
 // ============================
-// Gemini Voice Assistant Script
+// Gemini Voice Assistant Script (with backend proxy)
 // ============================
 
-// Gemini API setup
-const API_KEY = "YOUR_API_KEY"; // 🔒 Replace this with your real API key
-const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
-
-// ============================
-// Function to call Gemini API
-// ============================
+// Function to call your Node.js backend (which talks to Gemini)
 async function getData(userInput) {
   try {
-    const payload = {
-      contents: [
-        {
-          role: "user", // ✅ Important: Gemini expects a role field
-          parts: [{ text: userInput }]
-        }
-      ]
-    };
+    // Send to your local server
+    const res = await axios.post("http://localhost:3000/api/ask", { userInput });
 
-    // Call Gemini API
-    const res = await axios.post(URL, payload);
-
-    // Extract AI response text
-    const aiText = res.data.candidates?.[0]?.content?.parts?.[0]?.text || "No response from AI.";
+    // Extract the AI's text response safely
+    const aiText =
+      res.data.candidates?.[0]?.content?.parts?.[0]?.text ||
+      "No response from AI.";
 
     console.log("🤖 AI says:", aiText);
 
-    // Display it on the webpage
+    // Display on page
     document.querySelector(".output").innerText = "🤖 " + aiText;
 
-    // Speak out loud
+    // Speak the AI response
     speak(aiText);
 
   } catch (err) {
-    console.error("Error from Gemini:", err.response?.data || err);
-    document.querySelector(".output").innerText = "⚠️ Error: " + (err.response?.data?.error?.message || "Something went wrong!");
+    console.error("Error from backend:", err.response?.data || err);
+    document.querySelector(".output").innerText =
+      "⚠️ Error: " +
+      (err.response?.data?.error?.message || "Something went wrong!");
   }
 }
 
 // ============================
 // Speech Recognition Setup
 // ============================
+
 let recognize = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
 
-// Default language (you can change via dropdown)
+// Default language (English)
 recognize.lang = "en-US";
 recognize.interimResults = false;
 recognize.maxAlternatives = 1;
@@ -58,7 +48,12 @@ recognize.onresult = (event) => {
   getData(userInput);
 };
 
-// On speech recognition error
+// When speech recognition ends automatically
+recognize.onend = () => {
+  console.log("🎙️ Speech recognition stopped.");
+};
+
+// On recognition error
 recognize.onerror = (e) => {
   console.error("Speech error:", e.error);
   document.querySelector(".output").innerText = "⚠️ Speech error: " + e.error;
@@ -70,9 +65,9 @@ recognize.onerror = (e) => {
 function speak(text) {
   const utterance = new SpeechSynthesisUtterance();
   utterance.text = text;
-  utterance.lang = "en-IN"; // Indian English accent (smooth & clear)
-  utterance.rate = 1;       // Normal speed
-  utterance.pitch = 1;      // Normal tone
+  utterance.lang = "en-IN"; // Indian English accent
+  utterance.rate = 1;
+  utterance.pitch = 1;
   window.speechSynthesis.speak(utterance);
 }
 
@@ -93,9 +88,10 @@ if (languageSelector) {
   languageSelector.addEventListener("change", (e) => {
     recognize.lang = e.target.value;
     console.log("🌐 Language changed to:", recognize.lang);
-    document.querySelector(".output").innerText = `🌐 Language set to: ${recognize.lang}`;
+    document.querySelector(".output").innerText =
+      `🌐 Language set to: ${recognize.lang}`;
   });
 }
 
-// ✅ Make startListening available to HTML button
+// ✅ Expose startListening() to HTML button
 window.startListening = startListening;
